@@ -2,6 +2,8 @@
 
 HAAZIR is a simple face recognition-based student attendance system built using Python, Flask, OpenCV, NumPy, and Matplotlib. It is designed as a lightweight college project that is easy to understand and demonstrate in a viva.
 
+GitHub repository: https://github.com/karanladane320-bit/hazzari-face-attendance
+
 ## Features
 
 - Student registration with details and PRN
