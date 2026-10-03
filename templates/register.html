@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Register Student</h2>
+</div>
+
+<section class="face-registration-layout">
+    <div>
+        {% if not registered_student %}
+        <form method="POST" class="form-card">
+            <h3>Student Details</h3>
+            <div class="form-grid">
+                <label>Student ID / Roll Number
+                    <input type="text" name="student_id" inputmode="numeric" pattern="[0-9]+" required>
+                </label>
+                <label>Student Name
+                    <input type="text" name="name" required>
+                </label>
+                <label>PRN
+                    <input type="text" name="prn" required>
+                </label>
+                <label>Class
+                    <input type="text" name="class" required>
+                </label>
+                <label>Division
+                    <input type="text" name="division" required>
+                </label>
+                <label>Department
+                    <input type="text" name="department" required>
+                </label>
+            </div>
+            <button type="submit" class="primary-btn">Save Details & Continue</button>
+        </form>
+        {% else %}
+        <div class="form-card">
+            <h3>{{ registered_student.name }} <span class="muted">· Roll {{ registered_student.student_id }}</span></h3>
+            <p id="camera-message" role="status">Opening your camera…</p>
+            <div class="capture-progress">
+                <progress id="sample-progress" value="{{ sample_count }}" max="{{ sample_target }}"></progress>
+                <span id="sample-count">{{ sample_count }} / {{ sample_target }} samples</span>
+            </div>
+            <div class="capture-controls">
+                <button id="camera-button" type="button" class="secondary-btn">Open Camera</button>
+                <button id="capture-button" type="button" class="primary-btn" disabled>Capture Face Samples</button>
+            </div>
+            <p class="muted">Keep one person in view and face the camera while samples are captured.</p>
+        </div>
+        {% endif %}
+    </div>
+    <div>
+        {% if not registered_student %}
+        <h3>Camera Preview</h3>
+        <p id="camera-message" role="status">Opening your camera…</p>
+        {% endif %}
+        <div class="registration-camera">
+            <video id="registration-video" autoplay playsinline muted></video>
+        </div>
+        {% if not registered_student %}
+        <p class="muted">Allow camera access when your browser asks. Save the details to start face capture.</p>
+        <button id="camera-button" type="button" class="secondary-btn">Open Camera</button>
+        {% endif %}
+    </div>
+</section>
+{% if registered_student %}
+<canvas id="capture-canvas" hidden></canvas>
+<script>
+    const studentId = {{ registered_student.student_id | tojson }};
+    const targetSamples = {{ sample_target }};
+    const video = document.getElementById("registration-video");
+    const cameraButton = document.getElementById("camera-button");
+    const captureButton = document.getElementById("capture-button");
+    const statusText = document.getElementById("camera-message");
+    const progress = document.getElementById("sample-progress");
+    const sampleCount = document.getElementById("sample-count");
+    const canvas = document.getElementById("capture-canvas");
+    let cameraStream = null;
+    let capturing = false;
+
+    async function openCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            statusText.textContent = "Camera access is unavailable. Open this page on the same computer as HAAZIR using http://127.0.0.1:5000.";
+            return;
+        }
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "user" },
+                audio: false
+            });
+            video.srcObject = cameraStream;
+            await video.play();
+            captureButton.disabled = false;
+            cameraButton.disabled = true;
+            statusText.textContent = "Camera is on. Position the student in the preview, then capture samples.";
+        } catch (error) {
+            statusText.textContent = "Could not open camera: " + error.message + ". Check camera permission, then try Open Camera again.";
+        }
+    }
+
+    function stopCamera() {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+        }
+    }
+
+    async function captureSamples() {
+        if (capturing) return;
+        capturing = true;
+        captureButton.disabled = true;
+        statusText.textContent = "Detecting the face and collecting samples…";
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+
+        try {
+            while (progress.value < targetSamples) {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.85));
+                if (!frame) throw new Error("Could not read a frame from the camera.");
+                const formData = new FormData();
+                formData.append("frame", frame, "camera.jpg");
+                const response = await fetch(`/capture_face/${encodeURIComponent(studentId)}`, {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || "Face capture failed.");
+                progress.value = result.samples;
+                sampleCount.textContent = `${result.samples} / ${targetSamples} samples`;
+                statusText.textContent = result.message;
+                await new Promise(resolve => setTimeout(resolve, 220));
+                if (result.status === "no_face" || result.status === "multiple_faces") {
+                    await new Promise(resolve => setTimeout(resolve, 400));
+                }
+            }
+
+            const response = await fetch(`/finish_face_capture/${encodeURIComponent(studentId)}`, { method: "POST" });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Could not train the face model.");
+            statusText.textContent = result.message;
+            window.location.href = "{{ url_for('students') }}";
+        } catch (error) {
+            statusText.textContent = error.message;
+            captureButton.disabled = false;
+        } finally {
+            capturing = false;
+        }
+    }
+
+    cameraButton.addEventListener("click", openCamera);
+    captureButton.addEventListener("click", captureSamples);
+    window.addEventListener("pagehide", stopCamera);
+    openCamera();
+</script>
+{% else %}
+<script>
+    const video = document.getElementById("registration-video");
+    const cameraButton = document.getElementById("camera-button");
+    const statusText = document.getElementById("camera-message");
+    let cameraStream = null;
+
+    async function openCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            statusText.textContent = "Camera access is unavailable here. Open HAAZIR on the same computer at http://127.0.0.1:5000.";
+            return;
+        }
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "user" },
+                audio: false
+            });
+            video.srcObject = cameraStream;
+            await video.play();
+            statusText.textContent = "Camera is on. Enter student details, then save to continue face capture.";
+            cameraButton.disabled = true;
+        } catch (error) {
+            statusText.textContent = "Could not open camera: " + error.message + ". Check camera permission, then click Open Camera.";
+        }
+    }
+
+    cameraButton.addEventListener("click", openCamera);
+    window.addEventListener("pagehide", () => {
+        if (cameraStream) cameraStream.getTracks().forEach(track => track.stop());
+    });
+    openCamera();
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Attendance Report</h2>
+</div>
+
+<form method="GET" class="filter-form">
+    <label>Select Date
+        <input type="date" name="date" value="{{ selected_date }}">
+    </label>
+    <button type="submit" class="primary-btn">Show Absence</button>
+</form>
+
+{% if report_file %}
+<div class="graph-box">
+    <img src="{{ report_file }}" alt="Attendance chart">
+</div>
+{% endif %}
+
+{% if absent_students %}
+<div class="card report-card">
+    <h3>Absent Students on {{ selected_date }}</h3>
+    <ul>
+        {% for student in absent_students %}
+        <li>{{ student.student_id }} - {{ student.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+# Student records and attendance contain personal information.
+/data/*.csv
+
+# Face images, trained recognizer, and generated reports are local runtime data.
+/dataset/*
+/trainer/*
+/static/generated/*
+
+# Local system and Python files.
+__pycache__/
+*.py[cod]
+.DS_Store

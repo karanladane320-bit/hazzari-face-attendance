@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Attendance Records</h2>
+</div>
+
+<form method="GET" class="filter-form">
+    <label>Date
+        <input type="date" name="date" value="{{ selected_date }}">
+    </label>
+    <label>Student ID
+        <input type="text" name="student_id" value="{{ selected_student_id }}">
+    </label>
+    <button type="submit" class="primary-btn">Filter</button>
+</form>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.student_id }}</td>
+            <td>{{ record.name }}</td>
+            <td>{{ record.date }}</td>
+            <td>{{ record.time }}</td>
+            <td>{{ record.status }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">No attendance records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

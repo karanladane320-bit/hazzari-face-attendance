@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="dashboard">
+    <div class="card stats-card">
+        <h3>Total Students</h3>
+        <p>{{ stats.total_students }}</p>
+    </div>
+    <div class="card stats-card">
+        <h3>Today's Present</h3>
+        <p>{{ stats.today_present }}</p>
+    </div>
+    <div class="card stats-card">
+        <h3>Today's Absent</h3>
+        <p>{{ stats.today_absent }}</p>
+    </div>
+    <div class="card stats-card">
+        <h3>Attendance Percentage</h3>
+        <p>{{ stats.attendance_percentage }}%</p>
+    </div>
+</section>
+
+<section class="action-grid">
+    <a class="action-btn" href="{{ url_for('register_student') }}">Register Student</a>
+    <a class="action-btn" href="{{ url_for('attendance_page') }}">Start Attendance</a>
+    <a class="action-btn" href="{{ url_for('students') }}">View Students</a>
+    <a class="action-btn" href="{{ url_for('records') }}">View Attendance</a>
+    <a class="action-btn" href="{{ url_for('reports') }}">View Reports</a>
+</section>
+{% endblock %}

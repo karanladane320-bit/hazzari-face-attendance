@@ -1,0 +1,309 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f172a;
+    color: white;
+    padding: 18px 30px;
+}
+
+.brand-box h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.brand-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-logo {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 auto;
+}
+
+.brand-box p {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+
+.nav {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    padding: 24px;
+}
+
+.stats-card h3 {
+    margin: 0 0 12px;
+    color: #475569;
+}
+
+.stats-card p {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+.action-btn, .primary-btn, .delete-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-decoration: none;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+.delete-btn {
+    background: #dc2626;
+    padding: 8px 12px;
+}
+
+.form-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.face-registration {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.4fr);
+    gap: 24px;
+    align-items: center;
+}
+
+.face-registration-layout {
+    display: grid;
+    grid-template-columns: minmax(340px, 1fr) minmax(320px, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.face-registration-layout > div > h3 {
+    margin-top: 0;
+}
+
+.face-registration h3 {
+    margin-top: 0;
+}
+
+.muted {
+    color: #64748b;
+    font-weight: normal;
+}
+
+.registration-camera {
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    min-height: 260px;
+}
+
+.registration-camera video {
+    display: block;
+    width: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+.capture-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.capture-progress progress {
+    flex: 1;
+    height: 18px;
+}
+
+.capture-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.secondary-btn {
+    display: inline-block;
+    background: #475569;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.primary-btn:disabled, .secondary-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: 600;
+}
+
+input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 1rem;
+}
+
+.page-header {
+    margin-bottom: 20px;
+}
+
+.page-header h2 {
+    margin: 0;
+}
+
+.attendance-panel {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.video-box, .status-box, .report-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    padding: 20px;
+}
+
+.video-box img {
+    width: 100%;
+    border-radius: 10px;
+    background: #0f172a;
+    min-height: 320px;
+}
+
+.status-box p {
+    margin: 12px 0;
+}
+
+.filter-form {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.data-table th, .data-table td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 14px;
+    text-align: left;
+}
+
+.data-table th {
+    background: #e2e8f0;
+}
+
+.flash-box {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.graph-box {
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.graph-box img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .attendance-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .face-registration {
+        grid-template-columns: 1fr;
+    }
+
+    .face-registration-layout {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+    <h2>Take Attendance</h2>
+</div>
+
+<div class="attendance-panel">
+    <div class="video-box">
+        <img id="video-stream" src="{{ url_for('video_feed') }}" alt="Live attendance camera">
+    </div>
+    <div class="status-box">
+        <h3>Live Recognition</h3>
+        <p><strong>Name:</strong> <span id="student-name">Waiting...</span></p>
+        <p><strong>Roll No:</strong> <span id="student-id">-</span></p>
+        <p><strong>Confidence:</strong> <span id="student-confidence">-</span></p>
+        <p><strong>Status:</strong> <span id="student-status">Ready</span></p>
+        <p><strong>Message:</strong> <span id="student-message">No face detected. Please look at the camera.</span></p>
+    </div>
+</div>
+
+<script>
+    async function updateStatus() {
+        const response = await fetch("{{ url_for('status_endpoint') }}");
+        const data = await response.json();
+        document.getElementById("student-name").textContent = data.name || "Waiting...";
+        document.getElementById("student-id").textContent = data.student_id || "-";
+        document.getElementById("student-confidence").textContent = data.confidence || "-";
+        document.getElementById("student-status").textContent = data.status || "Ready";
+        document.getElementById("student-message").textContent = data.message || "No face detected. Please look at the camera.";
+    }
+    setInterval(updateStatus, 500);
+</script>
+{% endblock %}
